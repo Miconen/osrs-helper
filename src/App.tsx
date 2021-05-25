@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Login from './components/Login';
+import Profile from './components/Profile';
+import Navigation from './components/Navigation';
+import Quests from './components/Quests';
+import Stats from './components/Stats';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<Router>
+			<div className="App osrs flex h-screen w-screen">
+				<Navigation />
+				<Switch>
+					<Route exact path="/profile">
+						<Profile />
+					</Route>
+					<Route exact path="/stats">
+						<Stats />
+					</Route>
+					<Route exact path="/quests">
+						<Quests />
+					</Route>
+					<Route exact path="/login">
+						<Login />
+					</Route>
+					<Route path="/">
+						<Home />
+					</Route>
+				</Switch>
+			</div>
+		</Router>
+	);
 }
 
 export default App;
