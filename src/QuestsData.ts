@@ -1,4 +1,44 @@
-export const quests = [
+interface IQuestState {
+	id: string;
+	status: boolean;
+}
+
+export interface IQuest extends Partial<IQuestState> {
+	name: string;
+	prerequisites: string[];
+	reqs: IReqs;
+}
+
+interface IReqs {
+	[key: string]: number | undefined;
+	combat?: number;
+	qp?: number;
+	attack?: number;
+	hitpoints?: number;
+	mining?: number;
+	strength?: number;
+	agility?: number;
+	smithing?: number;
+	defence?: number;
+	herblore?: number;
+	fishing?: number;
+	ranged?: number;
+	thieving?: number;
+	cooking?: number;
+	prayer?: number;
+	crafting?: number;
+	firemaking?: number;
+	magic?: number;
+	fletching?: number;
+	woodcutting?: number;
+	runecraft?: number;
+	slayer?: number;
+	farming?: number;
+	construction?: number;
+	hunter?: number;
+}
+
+export const QuestsData: IQuest[] = [
 	{
 		name: "Black Knights' Fortress",
 		prerequisites: [],

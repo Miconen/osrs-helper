@@ -11,7 +11,7 @@ import Stats from './components/Stats';
 function App() {
 	return (
 		<Router>
-			<div className="App osrs flex h-screen w-screen">
+			<main className="App osrs flex h-screen w-screen">
 				<Navigation />
 				<Switch>
 					<Route exact path="/profile">
@@ -20,7 +20,7 @@ function App() {
 					<Route exact path="/stats">
 						<Stats />
 					</Route>
-					<Route exact path="/quests">
+					<Route exact path="/Quests">
 						<Quests />
 					</Route>
 					<Route exact path="/login">
@@ -30,7 +30,7 @@ function App() {
 						<Home />
 					</Route>
 				</Switch>
-			</div>
+			</main>
 		</Router>
 	);
 }

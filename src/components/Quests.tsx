@@ -1,46 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import Quest from './Quest';
+import { Quest } from './Quest';
 import { v4 as uuidv4 } from 'uuid';
-import { quests } from '../quests';
-
-const QuestLog = quests.map((quest) => (
-	<Quest
-		key={uuidv4()}
-		className="mr-5"
-		name={quest.name}
-		prerequisites={[...quest.prerequisites]}
-		reqs={quest.reqs}
-	/>
-));
-
-const QUEST_KEY = 'osrs.quests';
-
-interface QuestInterface {
-	id: string;
-	name: string;
-	status: boolean;
-}
+import { IQuest, QuestsData } from '../QuestsData';
 
 export default function Quests() {
-	const [questList, setQuest] = useState([]);
-	useEffect(() => {
-		localStorage.setItem(QUEST_KEY, JSON.stringify(quests));
-	}, [questList]);
+	const QUEST_KEY = 'osrs.Quests';
+	const [questList, setQuest] = useState<IQuest[]>([]);
 
-	useEffect(() => {
-		if (!localStorage.getItem(QUEST_KEY)) return;
-		const storedQuests = JSON.parse(localStorage.getItem(QUEST_KEY)!);
-		setQuest(storedQuests);
-	}, []);
-	for (let quest of quests) {
-		let oldQuests: QuestInterface[] = [...questList];
-		oldQuests.push({ id: uuidv4(), name: quest.name, status: false });
-		setQuest(oldQuests);
+	const toggleQuest = (id: string) => {
+		let newQuests = [...questList];
+		let quest = newQuests.find((quest) => quest.id === id);
+		if (!quest) return;
+		quest.status = !quest.status;
+		setQuest(newQuests);
+	};
+
+	const appendQuests = () => {
+		let quests =
+			Array.isArray(questList) && questList.length
+				? questList
+				: QuestsData;
+
+		for (let quest of quests) {
+			setQuest((oldQuests) => {
+				return [
+					...oldQuests,
+					{
+						id: uuidv4(),
+						status: false,
+						name: quest.name,
+						prerequisites: quest.prerequisites,
+						reqs: quest.reqs,
+					},
+				];
+			});
+		}
+	};
+
+	function handleClearQuests() {
+		const newQuests = QuestsData.filter((quest) => !quest.status);
+		setQuest(newQuests);
 	}
 
+	useEffect(() => {
+		let localQuests = localStorage.getItem(QUEST_KEY);
+		if (!localQuests) {
+			let storedQuests = JSON.parse(localQuests!);
+			setQuest(storedQuests);
+			return;
+		}
+		appendQuests();
+		console.log(localStorage.getItem(QUEST_KEY));
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem(QUEST_KEY, JSON.stringify(Quests));
+		console.log(localStorage.getItem(QUEST_KEY));
+	}, [questList]);
+
+	const Quester = questList.map((quest) => {
+		return <Quest key={quest.id} toggleQuest={toggleQuest} quest={quest} />;
+	});
+
 	return (
-		<main className="osrs__main osrs__quests grid grid-cols-2 gap-5">
-			{/* {QuestLog} */}
-		</main>
+		<section className="osrs__main osrs__quests grid grid-cols-2 gap-5">
+			{Quester}
+		</section>
 	);
 }
